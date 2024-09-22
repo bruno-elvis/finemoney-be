@@ -26,7 +26,7 @@ export class BankAccountsService {
 	}
 
 	async findAllByUserId(userId: string) {
-		const bankAccountAccountQuery = await this.repoBankAccounts.findMany({
+		/*const bankAccountAccountQuery = await this.repoBankAccounts.findMany({
 			where: { userId },
 			include: { transactions: { select: { value: true, type: true } } },
 		});
@@ -40,8 +40,10 @@ export class BankAccountsService {
 
 			const currentBalance = bankAccount.initialBalance + totalTransactions;
 
-			return { ...bankAccount, currentBalance, transactions };
-		});
+			return { ...bankAccount, currentBalance };
+		});*/
+
+		return this.repoBankAccounts.findMany(userId);
 	}
 
 	async update(userId: string, bankAccountId: string, updateBankAccountDto: UpdateBankAccountDto) {
