@@ -25,23 +25,29 @@ export class BankAccountsService {
 		});
 	}
 
-	findAllByUserId(userId: string) {
-		return this.repoBankAccounts.findMany({
+	async findAllByUserId(userId: string) {
+		const bankAccountAccountQuery = await this.repoBankAccounts.findMany({
 			where: { userId },
+			include: { transactions: { select: { value: true, type: true } } },
+		});
+
+		return bankAccountAccountQuery.map(({ transactions, ...bankAccount }) => {
+			const totalTransactions = transactions.reduce(
+				(acc, transaction) =>
+					acc + (transaction.type === 'INCOME' ? transaction.value : -transaction.value),
+				0,
+			);
+
+			const currentBalance = bankAccount.initialBalance + totalTransactions;
+
+			return { ...bankAccount, currentBalance, transactions };
 		});
 	}
 
-	async update(
-		userId: string,
-		bankAccountId: string,
-		updateBankAccountDto: UpdateBankAccountDto,
-	) {
+	async update(userId: string, bankAccountId: string, updateBankAccountDto: UpdateBankAccountDto) {
 		const { name, initialBalance, type, color } = updateBankAccountDto;
 
-		await this.validateBankAccountOwnershipService.validate(
-			userId,
-			bankAccountId,
-		);
+		await this.validateBankAccountOwnershipService.validate(userId, bankAccountId);
 
 		return this.repoBankAccounts.update({
 			where: {
@@ -57,10 +63,7 @@ export class BankAccountsService {
 	}
 
 	async remove(userId: string, bankAccountId: string) {
-		await this.validateBankAccountOwnershipService.validate(
-			userId,
-			bankAccountId,
-		);
+		await this.validateBankAccountOwnershipService.validate(userId, bankAccountId);
 
 		await this.repoBankAccounts.delete({
 			where: { id: bankAccountId },
