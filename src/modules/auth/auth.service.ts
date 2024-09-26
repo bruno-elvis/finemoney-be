@@ -25,9 +25,9 @@ export class AuthService {
 
 		if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials.');
 
-		const acessToken = await this.generateAccessToken(user.id);
+		const accessToken = await this.generateAccessToken(user.id);
 
-		return acessToken;
+		return { accessToken };
 	}
 
 	async signup(signupDto: SignupDto) {
