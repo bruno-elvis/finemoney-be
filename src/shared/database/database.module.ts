@@ -14,11 +14,6 @@ import { TransactionsRepository } from './repositories/transactions.repositories
 		BankAccountsRepository,
 		TransactionsRepository,
 	],
-	exports: [
-		UsersRepository,
-		CategoriesRepository,
-		BankAccountsRepository,
-		TransactionsRepository,
-	],
+	exports: [UsersRepository, CategoriesRepository, BankAccountsRepository, TransactionsRepository],
 })
 export class DatabaseModule {}

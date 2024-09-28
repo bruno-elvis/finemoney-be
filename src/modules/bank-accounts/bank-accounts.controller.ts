@@ -20,10 +20,7 @@ export class BankAccountsController {
 	constructor(private readonly bankAccountsService: BankAccountsService) {}
 
 	@Post()
-	create(
-		@ActiveUserId() userId: string,
-		@Body() createBankAccountDto: CreateBankAccountDto,
-	) {
+	create(@ActiveUserId() userId: string, @Body() createBankAccountDto: CreateBankAccountDto) {
 		return this.bankAccountsService.create(userId, createBankAccountDto);
 	}
 
@@ -38,11 +35,7 @@ export class BankAccountsController {
 		@Param('bankAccountId', ParseUUIDPipe) bankAccountId: string,
 		@Body() updateBankAccountDto: UpdateBankAccountDto,
 	) {
-		return this.bankAccountsService.update(
-			userId,
-			bankAccountId,
-			updateBankAccountDto,
-		);
+		return this.bankAccountsService.update(userId, bankAccountId, updateBankAccountDto);
 	}
 
 	@Delete(':bankAccountId')
